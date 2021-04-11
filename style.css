@@ -1,0 +1,39 @@
+body {
+  box-sizing: border-box;
+  font-family: "Goldman", cursive;
+  display: flex;
+  place-items: center;
+  justify-content: center;
+}
+
+.game-container {
+  background: #d8d8d8;
+}
+
+.cell-container {
+  display: grid;
+}
+
+.cell {
+  border-style: inset;
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.square {
+  font-size: 1rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  background: #babcbe;
+  display: flex;
+  place-items: center;
+  justify-content: center;
+}
+
+.covered {
+  visibility: hidden;
+}
+
+.flagged::before {
+  content: "🚩";
+}
