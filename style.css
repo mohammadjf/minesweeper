@@ -30,10 +30,17 @@ body {
   justify-content: center;
 }
 
-.covered {
-  visibility: hidden;
+.flag {
+  font-size: 1rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  display: flex;
+  place-items: center;
+  justify-content: center;
 }
 
-.flagged::before {
-  content: "🚩";
+.covered {
+  visibility: hidden;
+  width: 0;
+  height: 0;
 }

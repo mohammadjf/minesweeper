@@ -1,25 +1,25 @@
 "use strict";
 
-// Functions
-
 // Construtions
-const width = 20;
-const height = 20;
+const width = 10;
+const height = 10;
 
 generateBoard();
-makeRandomBombs(90);
+makeRandomBombs(20);
+
 document.querySelectorAll(".cell").forEach((cell) => {
   cell.addEventListener("click", (e) => {
-    openSquare(e.target.children[0]);
+    openSquare(e.target.children[1]);
   });
   cell.addEventListener("contextmenu", (e) => {
     e.preventDefault();
-    e.target.innerHTML = e.target.innerHTML === "🚩" ? "" : "🚩";
+    flag(e.target);
   });
 });
+
 generateNumbers();
 
-// Functionality
+// Functions
 function generateBoard() {
   document.querySelector(
     ".cell-container"
@@ -30,6 +30,7 @@ function generateBoard() {
         "beforeend",
         `
         <div class="cell">
+        <div class="flag covered">🚩</div>
         <div class="square covered" id="cell-${x}-${y}"></div>
         </div>
         `
@@ -39,11 +40,10 @@ function generateBoard() {
 }
 
 function makeRandomBombs(x) {
-  const set = new Set();
   for (let i = 0; i < x; i++) {
     let randomNum = Math.trunc(Math.random() * width * height) + 1;
     document.querySelector(
-      `.cell-container div:nth-child(${randomNum}) div`
+      `.cell-container div:nth-child(${randomNum}) .square`
     ).innerHTML = "💣";
   }
 }
@@ -51,11 +51,16 @@ function makeRandomBombs(x) {
 function openSquare(square) {
   if (square?.classList.contains("covered")) {
     square.classList.remove("covered");
-    console.log(square);
     if (square.innerHTML == 0) {
       openAroundSquares(square);
     }
   }
+}
+
+function flag(node) {
+  node.children[0]?.classList.contains("covered")
+    ? node.children[0].classList.remove("covered")
+    : node.classList.add("covered");
 }
 
 function openAroundSquares(square) {
@@ -105,8 +110,4 @@ function generateNumbers() {
     if (downLeftSquare?.innerHTML === "💣") number++;
     square.innerHTML = number === 0 ? "" : number;
   });
-}
-
-function flagSquare() {
-  docume;
 }
