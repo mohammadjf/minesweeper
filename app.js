@@ -4,11 +4,12 @@
 function setGame(width, height, mode) {
   generateBoard(width, height);
   const squaresNumber = width * height;
-  makeRandomBombs(50, squaresNumber);
+  makeRandomBombs(2, squaresNumber);
 
   document.querySelectorAll(".cell").forEach((cell) => {
     cell.addEventListener("click", (e) => {
       openSquare(e.target);
+      checkWin();
     });
     cell.addEventListener("contextmenu", (e) => {
       e.preventDefault();
@@ -19,7 +20,7 @@ function setGame(width, height, mode) {
   generateNumbers();
 }
 
-setGame(12, 12);
+setGame(5, 5);
 // Functions
 function generateBoard(width, height) {
   document.querySelector(
@@ -100,7 +101,6 @@ function openSquare(cell) {
       openAroundSquares(cell);
     } else if (square.textContent === "💣") explosion(cell);
   }
-  checkWin();
 }
 
 function flag(node) {
@@ -109,7 +109,6 @@ function flag(node) {
       ? node.children[0].classList.remove("hidden")
       : node.classList.add("hidden");
   }
-  checkWin();
 }
 
 function openAroundSquares(cell) {
@@ -159,18 +158,16 @@ function explosion(cell) {
   clearInterval(stopWatch);
 }
 
-function showCongrats() {}
-
 function checkWin() {
   let won = true;
   document.querySelectorAll(".cell").forEach((cell) => {
     if (
-      cell.children[1].textContent === "💣" &&
-      cell.children[1].classList.contains("covered")
+      cell.children[1].textContent !== "💣" &&
+      cell.children[1].classList.contains("hidden")
     )
       won = false;
   });
-  won && showCongrats();
+  won && showmessage("You Won 😎");
 }
 
 let stopWatch;
