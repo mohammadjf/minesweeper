@@ -10,6 +10,18 @@ body {
   background: #d8d8d8;
 }
 
+#game-over {
+  opacity: 0;
+  font-size: 2rem;
+  position: absolute;
+  background: rgba(206, 199, 176, 0.73);
+  z-index: 1;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  transition: opacity 1s;
+}
+
 .cell-container {
   display: grid;
 }
@@ -32,14 +44,15 @@ body {
 
 .flag {
   font-size: 1rem;
-  width: 1.5rem;
-  height: 1.5rem;
+  width: 30px;
+  height: 30px;
+  transform: translate(-3px, -3px);
   display: flex;
   place-items: center;
   justify-content: center;
 }
 
-.covered {
+.hidden {
   visibility: hidden;
   width: 0;
   height: 0;
