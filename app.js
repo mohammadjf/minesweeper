@@ -3,7 +3,7 @@
 // Construtions
 let stopWatch;
 setGame();
-
+displayBestTime();
 // Functions
 
 document.querySelector("#new-game").addEventListener("click", (e) => {
@@ -12,6 +12,7 @@ document.querySelector("#new-game").addEventListener("click", (e) => {
 });
 
 function setGame() {
+  clearInterval(stopWatch);
   const width = document.querySelector("#width").value;
   const height = document.querySelector("#height").value;
   const difficulty = document.querySelector("#difficulty").value;
@@ -32,8 +33,8 @@ function setGame() {
   stopWatch = null;
   document.querySelectorAll(".cell").forEach((cell) => {
     cell.addEventListener("click", (e) => {
-      openSquare(e.target);
       if (!stopWatch) startTimer();
+      openSquare(e.target);
       checkWin();
     });
     cell.addEventListener("contextmenu", (e) => {
@@ -185,7 +186,10 @@ function checkWin() {
   });
   if (won) {
     showMessage("You Won 😎");
+    setBestTime();
+    console.log(getBestTime());
     clearInterval(stopWatch);
+    displayBestTime();
   }
 }
 
@@ -229,4 +233,20 @@ function startTimer() {
 
 function getTime() {
   return document.querySelector("#stop-watch").textContent;
+}
+
+function setBestTime() {
+  const time = getTime();
+  if (time.split(":").join("") < getBestTime().split(":").join(""))
+    localStorage.setItem("best", time);
+}
+
+function getBestTime() {
+  return localStorage.getItem("best");
+}
+
+function displayBestTime() {
+  document.querySelector(
+    "#best-time"
+  ).textContent = `Your Best Time : ${getBestTime()}`;
 }

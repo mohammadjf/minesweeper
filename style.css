@@ -12,7 +12,7 @@ body {
 }
 
 #game-options {
-  width: 400px;
+  width: 350px;
   margin: 1rem auto;
   display: grid;
   grid: 1fr 1fr / 1fr 1fr;
@@ -86,4 +86,16 @@ input {
   visibility: hidden;
   width: 0;
   height: 0;
+}
+
+#time-container p {
+  display: inline-block;
+}
+
+#stop-watch {
+  float: left;
+}
+
+#best-time {
+  float: right;
 }
