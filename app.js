@@ -246,7 +246,7 @@ function getBestTime() {
 }
 
 function displayBestTime() {
-  document.querySelector(
-    "#best-time"
-  ).textContent = `Your Best Time : ${getBestTime()}`;
+  document.querySelector("#best-time").textContent = `Your Best Time : ${
+    getBestTime() ? getBestTime() : "0"
+  }`;
 }
