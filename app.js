@@ -1,11 +1,18 @@
 "use strict";
 
 // Construtions
+let stopWatch;
+setGame(15, 15);
+
+// Functions
+
 function setGame(width, height, mode) {
+  document.querySelector(".cell-container").textContent = "";
+  hideMessage();
   generateBoard(width, height);
   const squaresNumber = width * height;
-  makeRandomBombs(2, squaresNumber);
-
+  makeRandomBombs(20, squaresNumber);
+  stopWatch = null;
   document.querySelectorAll(".cell").forEach((cell) => {
     cell.addEventListener("click", (e) => {
       openSquare(e.target);
@@ -13,15 +20,13 @@ function setGame(width, height, mode) {
     });
     cell.addEventListener("contextmenu", (e) => {
       e.preventDefault();
-      flag(e.target);
+      mark(e.target);
     });
   });
 
   generateNumbers();
 }
 
-setGame(5, 5);
-// Functions
 function generateBoard(width, height) {
   document.querySelector(
     ".cell-container"
@@ -53,10 +58,17 @@ function makeRandomBombs(x, numEndPoint) {
   }
 }
 
+// Easy access to cell children
+function flag(cell) {
+  return cell?.children[0];
+}
+function square(cell) {
+  return cell?.children[1];
+}
+
 function generateNumbers() {
   document.querySelectorAll(".cell").forEach((cell) => {
-    const square = cell.children[1];
-    if (square.textContent === "💣") return true;
+    if (square(cell).textContent === "💣") return true;
     let number = 0;
     const dividedID = cell.id.split("-");
     const x = +dividedID[1];
@@ -85,28 +97,26 @@ function generateNumbers() {
     if (upLeftSquare?.textContent === "💣") number++;
     if (downRightSquare?.textContent === "💣") number++;
     if (downLeftSquare?.textContent === "💣") number++;
-    square.textContent = number === 0 ? "" : number;
+    square(cell).textContent = number === 0 ? "" : number;
   });
 }
 
 function openSquare(cell) {
   if (!stopWatch) startTimer();
-  const sameCellFlag = document.querySelector(`#${cell?.id} .flag`);
-  const square = cell?.children[1];
-  if (square?.classList.contains("hidden")) {
-    square.classList.remove("hidden");
-    sameCellFlag?.classList.contains("hidden") ||
-      sameCellFlag?.classList.add("hidden");
-    if (square.textContent == 0) {
+  if (square(cell)?.classList.contains("hidden")) {
+    square(cell).classList.remove("hidden");
+    flag(cell)?.classList.contains("hidden") ||
+      flag(cell)?.classList.add("hidden");
+    if (square(cell).textContent == 0) {
       openAroundSquares(cell);
-    } else if (square.textContent === "💣") explosion(cell);
+    } else if (square(cell).textContent === "💣") explosion(cell);
   }
 }
 
-function flag(node) {
+function mark(node) {
   if (!node.classList.contains("square")) {
-    node.children[0]?.classList.contains("hidden")
-      ? node.children[0].classList.remove("hidden")
+    flag(node)?.classList.contains("hidden")
+      ? flag(node).classList.remove("hidden")
       : node.classList.add("hidden");
   }
 }
@@ -133,28 +143,16 @@ function openAroundSquares(cell) {
   openSquare(downLeftSquare);
 }
 
-function showmessage(message) {
-  const html = `
-  <h2 id="message">${message}</h2>
-  <p id="score"> Your Time : ${getTime()}</p>
-  `;
-  document
-    .querySelector("#message-container")
-    .insertAdjacentHTML("afterbegin", html);
-  document.querySelector("#message-container").style.opacity = "100";
-  document.querySelector("#message-container").classList.remove("hidden");
-}
-
 function explosion(cell) {
-  cell.children[1].textContent = "💥";
+  square(cell).textContent = "💥";
   document.querySelectorAll(".cell").forEach((cell) => {
     if (
-      cell.children[1].textContent === "💣" &&
-      cell.children[0].classList.contains("hidden")
+      square(cell).textContent === "💣" &&
+      flag(cell).classList.contains("hidden")
     )
-      cell.children[1].classList.remove("hidden");
+      square(cell).classList.remove("hidden");
   });
-  showmessage("You Lost 😵");
+  showMessage("You Lost 😵");
   clearInterval(stopWatch);
 }
 
@@ -162,15 +160,36 @@ function checkWin() {
   let won = true;
   document.querySelectorAll(".cell").forEach((cell) => {
     if (
-      cell.children[1].textContent !== "💣" &&
-      cell.children[1].classList.contains("hidden")
+      square(cell).textContent !== "💣" &&
+      square(cell).classList.contains("hidden")
     )
-      won = false;
+      return (won = false);
   });
-  won && showmessage("You Won 😎");
+  won && showMessage("You Won 😎");
 }
 
-let stopWatch;
+function showMessage(message) {
+  const html = `
+  <h2 id="message">${message}</h2>
+  <p id="score"> Your Time : ${getTime()}</p>
+  <button id="try-again" class="btn">Try Again</button>
+  `;
+  document
+    .querySelector("#message-container")
+    .insertAdjacentHTML("afterbegin", html);
+  document
+    .querySelector("#try-again")
+    .addEventListener("click", () => setGame(15, 15));
+  document.querySelector("#message-container").style.opacity = "100";
+  document.querySelector("#message-container").classList.remove("hidden");
+}
+
+function hideMessage() {
+  document.querySelector("#message-container").textContent = "";
+  document.querySelector("#message-container").style.opacity = "0";
+  document.querySelector("#message-container").classList.add("hidden");
+}
+
 function startTimer() {
   function tick() {
     const min = String(Math.trunc(time / 60)).padStart(2, 0);
