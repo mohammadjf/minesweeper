@@ -2,20 +2,38 @@
 
 // Construtions
 let stopWatch;
-setGame(15, 15);
+setGame();
 
 // Functions
 
-function setGame(width, height, mode) {
+document.querySelector("#new-game").addEventListener("click", (e) => {
+  e.preventDefault();
+  setGame();
+});
+
+function setGame() {
+  const width = document.querySelector("#width").value;
+  const height = document.querySelector("#height").value;
+  const difficulty = document.querySelector("#difficulty").value;
   document.querySelector(".cell-container").textContent = "";
   hideMessage();
   generateBoard(width, height);
-  const squaresNumber = width * height;
-  makeRandomBombs(20, squaresNumber);
+  const squaresMass = width * height;
+  let bombMass;
+
+  if (difficulty == 1) {
+    bombMass = squaresMass / 6;
+  } else if (difficulty == 2) {
+    bombMass = (2 * squaresMass) / 5;
+  } else if (difficulty == 3) {
+    bombMass = squaresMass / 2;
+  }
+  makeRandomBombs(bombMass, squaresMass);
   stopWatch = null;
   document.querySelectorAll(".cell").forEach((cell) => {
     cell.addEventListener("click", (e) => {
       openSquare(e.target);
+      if (!stopWatch) startTimer();
       checkWin();
     });
     cell.addEventListener("contextmenu", (e) => {
@@ -31,6 +49,7 @@ function generateBoard(width, height) {
   document.querySelector(
     ".cell-container"
   ).style.grid = `repeat(${height}, 1fr) / repeat(${width}, 1fr)`;
+  document.querySelector(".container").style.width = `${width * 30}px`;
   document.querySelector("#message-container").style.cssText = `width: ${
     width * 30
   }px; height: ${height * 30}px`;
@@ -49,9 +68,9 @@ function generateBoard(width, height) {
   }
 }
 
-function makeRandomBombs(x, numEndPoint) {
-  for (let i = 0; i < x; i++) {
-    let randomNum = Math.trunc(Math.random() * numEndPoint) + 1;
+function makeRandomBombs(bombMass, squaresMass) {
+  for (let i = 0; i < bombMass; i++) {
+    let randomNum = Math.trunc(Math.random() * squaresMass) + 1;
     document.querySelector(
       `.cell-container div:nth-child(${randomNum}) .square`
     ).textContent = "💣";
@@ -102,7 +121,6 @@ function generateNumbers() {
 }
 
 function openSquare(cell) {
-  if (!stopWatch) startTimer();
   if (square(cell)?.classList.contains("hidden")) {
     square(cell).classList.remove("hidden");
     flag(cell)?.classList.contains("hidden") ||
@@ -165,7 +183,10 @@ function checkWin() {
     )
       return (won = false);
   });
-  won && showMessage("You Won 😎");
+  if (won) {
+    showMessage("You Won 😎");
+    clearInterval(stopWatch);
+  }
 }
 
 function showMessage(message) {
@@ -179,7 +200,7 @@ function showMessage(message) {
     .insertAdjacentHTML("afterbegin", html);
   document
     .querySelector("#try-again")
-    .addEventListener("click", () => setGame(15, 15));
+    .addEventListener("click", () => setGame(15, 15, 1));
   document.querySelector("#message-container").style.opacity = "100";
   document.querySelector("#message-container").classList.remove("hidden");
 }
