@@ -56,7 +56,10 @@ input {
 }
 
 .cell {
-  border-style: inset;
+  border-top: 2px solid #fff;
+  border-right: 2px solid #808080;
+  border-bottom: 2px solid #808080;
+  border-left: 2px solid #fff;
   width: 1.5rem;
   height: 1.5rem;
 }
@@ -65,7 +68,6 @@ input {
   font-size: 1rem;
   width: 1.5rem;
   height: 1.5rem;
-  border: 3px;
   background: #babcbe;
   display: flex;
   place-items: center;

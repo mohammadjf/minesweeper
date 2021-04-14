@@ -13,10 +13,8 @@ document.querySelector("#new-game").addEventListener("click", (e) => {
 
 function setGame() {
   clearInterval(stopWatch);
-  // const width = document.querySelector("#width").value;
-  // const height = document.querySelector("#height").value;
-  const width = 5;
-  const height = 5;
+  const width = document.querySelector("#width").value;
+  const height = document.querySelector("#height").value;
   const difficulty = document.querySelector("#difficulty").value;
   document.querySelector(".cell-container").textContent = "";
   hideMessage();
@@ -31,7 +29,7 @@ function setGame() {
   } else if (difficulty == 3) {
     bombMass = squaresMass / 2;
   }
-  makeRandomBombs(1, squaresMass);
+  makeRandomBombs(bombMass, squaresMass);
   stopWatch = null;
   document.querySelectorAll(".cell").forEach((cell) => {
     cell.addEventListener("click", (e) => {
@@ -52,10 +50,10 @@ function generateBoard(width, height) {
   document.querySelector(
     ".cell-container"
   ).style.grid = `repeat(${height}, 1fr) / repeat(${width}, 1fr)`;
-  document.querySelector(".container").style.width = `${width * 30}px`;
+  document.querySelector(".container").style.width = `${width * 28}px`;
   document.querySelector("#message-container").style.cssText = `width: ${
-    width * 30
-  }px; height: ${height * 30}px`;
+    width * 28
+  }px; height: ${height * 28}px`;
   for (let x = 1; x <= height; x++) {
     for (let y = 1; y <= width; y++) {
       document.querySelector(".cell-container").insertAdjacentHTML(
