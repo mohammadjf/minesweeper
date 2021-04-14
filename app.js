@@ -13,8 +13,10 @@ document.querySelector("#new-game").addEventListener("click", (e) => {
 
 function setGame() {
   clearInterval(stopWatch);
-  const width = document.querySelector("#width").value;
-  const height = document.querySelector("#height").value;
+  // const width = document.querySelector("#width").value;
+  // const height = document.querySelector("#height").value;
+  const width = 5;
+  const height = 5;
   const difficulty = document.querySelector("#difficulty").value;
   document.querySelector(".cell-container").textContent = "";
   hideMessage();
@@ -29,7 +31,7 @@ function setGame() {
   } else if (difficulty == 3) {
     bombMass = squaresMass / 2;
   }
-  makeRandomBombs(bombMass, squaresMass);
+  makeRandomBombs(1, squaresMass);
   stopWatch = null;
   document.querySelectorAll(".cell").forEach((cell) => {
     cell.addEventListener("click", (e) => {
@@ -237,7 +239,10 @@ function getTime() {
 
 function setBestTime() {
   const time = getTime();
-  if (time.split(":").join("") < getBestTime().split(":").join(""))
+  if (
+    !getBestTime() ||
+    time.split(":").join("") < getBestTime().split(":").join("")
+  )
     localStorage.setItem("best", time);
 }
 
@@ -246,7 +251,9 @@ function getBestTime() {
 }
 
 function displayBestTime() {
-  document.querySelector("#best-time").textContent = `Your Best Time : ${
-    getBestTime() ? getBestTime() : "0"
-  }`;
+  document.querySelector("#best-time").textContent = getBestTime()
+    ? `Your Best Time : ${getBestTime()}`
+    : "";
 }
+
+console.log(getBestTime());
