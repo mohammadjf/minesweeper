@@ -90,14 +90,12 @@ input {
   height: 0;
 }
 
-#time-container p {
-  display: inline-block;
-}
-
 #stop-watch {
   float: left;
+  padding: 0 0.5rem;
 }
 
 #best-time {
   float: right;
+  padding: 0 0.5rem;
 }

@@ -12,12 +12,21 @@ document.querySelector("#new-game").addEventListener("click", (e) => {
 });
 
 function setGame() {
+  // Resetting time
   clearInterval(stopWatch);
+  document.querySelector("#stop-watch").textContent = "00:00";
+  stopWatch = null;
+
+  // Getting game options
   const width = document.querySelector("#width").value;
   const height = document.querySelector("#height").value;
   const difficulty = document.querySelector("#difficulty").value;
+
+  // Clearing previous game
   document.querySelector(".cell-container").textContent = "";
   hideMessage();
+
+  // Creating new game
   generateBoard(width, height);
   const squaresMass = width * height;
   let bombMass;
@@ -30,7 +39,9 @@ function setGame() {
     bombMass = squaresMass / 2;
   }
   makeRandomBombs(bombMass, squaresMass);
-  stopWatch = null;
+  generateNumbers();
+
+  // Adding right and left click events
   document.querySelectorAll(".cell").forEach((cell) => {
     cell.addEventListener("click", (e) => {
       if (!stopWatch) startTimer();
@@ -42,11 +53,10 @@ function setGame() {
       mark(e.target);
     });
   });
-
-  generateNumbers();
 }
 
 function generateBoard(width, height) {
+  // Setting board size
   document.querySelector(
     ".cell-container"
   ).style.grid = `repeat(${height}, 1fr) / repeat(${width}, 1fr)`;
@@ -54,14 +64,16 @@ function generateBoard(width, height) {
   document.querySelector("#message-container").style.cssText = `width: ${
     width * 28
   }px; height: ${height * 28}px`;
+
+  // Creating squares
   for (let x = 1; x <= height; x++) {
     for (let y = 1; y <= width; y++) {
       document.querySelector(".cell-container").insertAdjacentHTML(
         "beforeend",
         `
         <div class="cell" id="cell-${x}-${y}">
-        <div class="flag hidden">🚩</div>
-        <div class="square hidden"></div>
+          <div class="flag hidden">🚩</div>
+          <div class="square hidden"></div>
         </div>
         `
       );
@@ -187,7 +199,6 @@ function checkWin() {
   if (won) {
     showMessage("You Won 😎");
     setBestTime();
-    console.log(getBestTime());
     clearInterval(stopWatch);
     displayBestTime();
   }
@@ -253,5 +264,3 @@ function displayBestTime() {
     ? `Your Best Time : ${getBestTime()}`
     : "";
 }
-
-console.log(getBestTime());
