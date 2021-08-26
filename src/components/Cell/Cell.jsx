@@ -1,19 +1,11 @@
 import { useState } from "react";
 
-const Cell = ({ value }) => {
-  const [isHidden, setIsHidden] = useState(true);
-  const [flag, setFlag] = useState(null);
-
+const Cell = ({ x, y, value, isHidden, flag, onClick, onContextMenu }) => {
   return isHidden ? (
     <div
       className="cell hidden"
-      onClick={() => {
-        setIsHidden(flag === "🚩");
-      }}
-      onContextMenu={(e) => {
-        e.preventDefault();
-        setFlag(flag === null ? "🚩" : null);
-      }}
+      onClick={() => {onClick(x, y)}}
+      onContextMenu={(e) => {onContextMenu(x, y, e)}}
     >
       {flag}
     </div>
