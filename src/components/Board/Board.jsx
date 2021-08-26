@@ -22,14 +22,14 @@ const Board = ({ width, height }) => {
   const populateCellsWithBombs = (cellsArray, totalBombNumber) => {
     for (let i = 0; i < totalBombNumber; i++) {
       let randomNum = Math.trunc(Math.random() * (cellsArray.length - 1));
-      cellsArray[randomNum].value = "💣";
+      cellsArray[randomNum].value = "🧨";
     }
     return cellsArray;
   }
 
   const populateCellsWithNumbers = (_cells) => {
     const populatedCells = _cells.map(({ x, y, value, isHidden, flag }, i, cellsArray) => {
-      if (value === "💣") {
+      if (value === "🧨") {
         return { x, y, value, isHidden, flag };
       }
             
@@ -42,14 +42,14 @@ const Board = ({ width, height }) => {
       const belowRightCell = cellsArray.find((cell) => cell.x === x + 1 && cell.y === y - 1);
       const belowLeftCell = cellsArray.find((cell) => cell.x === x - 1 && cell.y === y - 1);
 
-      if (topCell?.value === "💣") value++;
-      if (belowCell?.value === "💣") value++;
-      if (rightCell?.value === "💣") value++;
-      if (leftCell?.value === "💣") value++;
-      if (topRightCell?.value === "💣") value++;
-      if (topLeftCell?.value === "💣") value++;
-      if (belowRightCell?.value === "💣") value++;
-      if (belowLeftCell?.value === "💣") value++;
+      if (topCell?.value === "🧨") value++;
+      if (belowCell?.value === "🧨") value++;
+      if (rightCell?.value === "🧨") value++;
+      if (leftCell?.value === "🧨") value++;
+      if (topRightCell?.value === "🧨") value++;
+      if (topLeftCell?.value === "🧨") value++;
+      if (belowRightCell?.value === "🧨") value++;
+      if (belowLeftCell?.value === "🧨") value++;
       value = value === 0 ? null : value;
       return { x, y, value, isHidden, flag };
     });
@@ -57,12 +57,22 @@ const Board = ({ width, height }) => {
   }
   
   const openCell = (x, y) => {
+    if (hasWon || hasLost) return false;
     const _cells = cells.slice();
     const i = _cells.findIndex((cell) => cell.x === x && cell.y === y);
     if (i !== -1) {
-      if (_cells[i].flag !== "🚩" && _cells[i].isHidden === true) {
-        _cells[i].isHidden = false;
-        if (_cells[i].value === null) {
+      const cell = _cells[i];
+      if (cell.flag !== "🚩" && cell.isHidden === true) {
+        if(cell.value === "🧨") {
+          setHasLost(true);
+          const bombIndexes = _cells.map(({value}, i) => value === "🧨" ? i : '').filter(String)
+          bombIndexes.map((bombIndex) => {cells[bombIndex].isHidden = false})
+          cell.value = "💥"
+          return false;
+        }
+
+        cell.isHidden = false;
+        if (cell.value === null) {
           openCell(x, y + 1)
           openCell(x, y - 1)
           openCell(x + 1, y)
@@ -78,6 +88,7 @@ const Board = ({ width, height }) => {
   }
 
   const flag = (x, y, e) => {
+    if (hasWon || hasLost) return false;
     e.preventDefault();
     const _cells = cells.slice();
     const i = _cells.findIndex((cell) => cell.x === x && cell.y === y);
